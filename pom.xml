@@ -29,6 +29,16 @@
       <artifactId>mysql-connector-java</artifactId>
       <version>8.0.33</version>
     </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.7.1</version> <!-- Versi terbaru -->
+    </dependency>
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>5.1.0</version>
+    </dependency>
   </dependencies>
 
   <build>
