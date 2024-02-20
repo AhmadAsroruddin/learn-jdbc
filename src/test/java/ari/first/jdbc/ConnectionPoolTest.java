@@ -56,12 +56,16 @@ public class ConnectionPoolTest {
     void showTableData() throws SQLException {
         Connection conn = Util.getDataSource().getConnection();
         Statement statement = conn.createStatement();
+        PreparedStatement preparedStatement = null;
 
         String query = """
-                    SELECT * from dummy_table;
+                    SELECT * from dummy_table where id = ?
                 """;
-        ResultSet resultSet = statement.executeQuery(query);
-        ResultSetMetaData metaData = resultSet.getMetaData();
+
+        preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1,6);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        ResultSetMetaData metaData = preparedStatement.getMetaData();
         int column = metaData.getColumnCount();
 
         for(int i = 1; i<=column; i++){
