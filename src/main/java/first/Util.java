@@ -8,9 +8,9 @@ public class Util {
 
     static {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://localhost:5432/mydatabase?serverTimeZone=Asia/Jakarta");
+        config.setJdbcUrl("jdbc:postgresql://localhost:5432/db_warung_makan_bahari_2?serverTimeZone=Asia/Jakarta");
         config.setUsername("postgres");
-        config.setPassword("Handball123");
+        config.setPassword("1234567");
 
         config.setMaximumPoolSize(10);
         config.setMinimumIdle(5);

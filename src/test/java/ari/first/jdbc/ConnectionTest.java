@@ -21,7 +21,7 @@ public class ConnectionTest {
 
     @Test
     void testConnection(){
-        String jdbcUrl = "jdbc:postgresql://localhost:5432/mydatabase?serverTimeZone=Asia/Jakarta";
+        String jdbcUrl = "jdbc:postgresql://localhost:5432/db_warung_makan_bahari_2?serverTimeZone=Asia/Jakarta";
         String username = "postgres";
         String password = "Handball123";
 

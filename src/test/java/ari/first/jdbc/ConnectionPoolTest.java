@@ -11,11 +11,12 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.extension.TestWatcher;
 
+import javax.xml.transform.Result;
 import java.sql.*;
 
 public class ConnectionPoolTest {
     private static Connection conn;
-
+    PreparedStatement preparedStatement = null;
     @BeforeEach
     void setUp()throws Exception{
         conn = Util.getDataSource().getConnection();
@@ -37,28 +38,6 @@ public class ConnectionPoolTest {
             conn.close();
         }
     }
-    @Test
-    void hikariCPConnectionTest(){
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://localhost:5432/mydatabase?serverTimeZone=Asia/Jakarta");
-        config.setUsername("postgres");
-        config.setPassword("Hkkii23");
-
-        config.setMaximumPoolSize(10);
-        config.setMinimumIdle(5);
-        config.setIdleTimeout(60_000);
-        config.setMaxLifetime(10*60_000);
-
-        try {
-            HikariDataSource dataSource = new HikariDataSource();
-            conn = dataSource.getConnection();
-            conn.close();
-            dataSource.close();
-        } catch (Exception e){
-            System.out.println(e);
-        }
-
-    }
 
     @Test
     void utilTest() throws Exception{
@@ -67,15 +46,15 @@ public class ConnectionPoolTest {
 
     @Test
     void updateTest(){
-        PreparedStatement preparedStatement = null;
+
 
         try{
             String query = """
-                    update dummy_table set name = ? where id = ?
+                    update m_discount set pct = ? where id = ?
                 """;
             preparedStatement = conn.prepareStatement(query);
-            preparedStatement.setString(1,"AIUSRA");
-            preparedStatement.setInt(2, 14);
+            preparedStatement.setInt(1,15);
+            preparedStatement.setInt(2, 2);
 
             preparedStatement.executeUpdate();
         }catch (Exception e){
@@ -137,16 +116,18 @@ public class ConnectionPoolTest {
     @Test
     void showTableData() throws SQLException {
         PreparedStatement preparedStatement = null;
+
         try {
 
-
+            String tableName = "m_customer";
             String query = """
-                    SELECT * from dummy_table where id = ?
-                """;
+                    SELECT * from
+                """ + tableName;
 
             preparedStatement = conn.prepareStatement(query);
-            preparedStatement.setInt(1, 13);
+
             ResultSet resultSet = preparedStatement.executeQuery();
+
             ResultSetMetaData metaData = preparedStatement.getMetaData();
             int column = metaData.getColumnCount();
 
@@ -166,19 +147,6 @@ public class ConnectionPoolTest {
         }
     }
 
-    @RegisterExtension
-    static TestWatcher watchman = new TestWatcher() {
-        @Override
-        public void testFailed(ExtensionContext context, Throwable cause) {
-            // Rollback the transaction if any test fails
-            ConnectionPoolTest testInstance = (ConnectionPoolTest) context.getTestInstance().get();
-            try {
-                testInstance.conn.rollback();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    };
 
     @Test
     void insertBatchData(){
@@ -199,4 +167,6 @@ public class ConnectionPoolTest {
             System.out.println(e);
         }
     }
+
+
 }
